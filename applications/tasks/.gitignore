@@ -1,0 +1,4 @@
+.deps.mk
+*.beam
+*.app
+

@@ -1,0 +1,65 @@
+{
+    "_id": "_design/maintenance",
+    "kazoo": {
+        "view_map": [
+            {
+                "classification": "account"
+            },
+            {
+                "classification": "acdc"
+            },
+            {
+                "classification": "aggregate"
+            },
+            {
+                "classification": "modb"
+            },
+            {
+                "classification": "yodb"
+            },
+            {
+                "classification": "numbers"
+            },
+            {
+                "classification": "ratedeck"
+            },
+            {
+                "classification": "resource_selectors"
+            },
+            {
+                "classification": "system"
+            }
+        ]
+    },
+    "language": "javascript",
+    "views": {
+        "conflicts": {
+            "map": "function(doc) { if(doc._conflicts) { emit(doc._conflicts, null); } }"
+        },
+        "listing_by_ctime": {
+            "map": "function(doc) { if(doc.pvt_deleted) return; emit(doc.pvt_created, null); }"
+        },
+        "listing_by_mtime": {
+            "map": "function(doc) { if(doc.pvt_deleted) return; emit(doc.pvt_modified, null); }"
+        },
+        "listing_by_type": {
+            "map": "function(doc) { if(!doc.pvt_deleted) { if (doc.pvt_type == 'user') emit(doc.pvt_type, {'name': doc.first_name + ' ' + doc.last_name}); else if (doc.pvt_type == 'callflow') emit(doc.pvt_type, {'numbers': doc.numbers, 'patterns': doc.patterns}); else emit(doc.pvt_type, {'name': doc.name}); } }"
+        },
+        "reduced_by_type": {
+            "map": "function(doc) { if(!doc.pvt_deleted) { if (doc.pvt_type == 'user') emit(doc.pvt_type, {'name': doc.first_name + ' ' + doc.last_name}); else if (doc.pvt_type == 'callflow') emit(doc.pvt_type, {'numbers': doc.numbers, 'patterns': doc.patterns}); else emit(doc.pvt_type, {'name': doc.name}); } }",
+            "reduce": "_count"
+        },
+        "soft_deletes": {
+            "map": [
+                "function(doc) {",
+                "  if (doc.pvt_deleted) {",
+                "    emit(doc.pvt_type, {",
+                "      'id': doc._id,",
+                "      '_rev': doc._rev",
+                "    });",
+                "  }",
+                "}"
+            ]
+        }
+    }
+}

@@ -1,0 +1,8 @@
+{application,edr,
+             [{applications,[blackhole,kazoo,kazoo_amqp,kazoo_apps,kazoo_edr,
+                             kazoo_stdlib,kazoo_web,kernel,lager,stdlib]},
+              {description,"Event Data Record application"},
+              {vsn, git},
+              {registered,[edr_sup]},
+              {modules,[]},
+              {mod,{edr_app,[]}}]}.
