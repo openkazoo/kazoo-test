@@ -29,18 +29,24 @@ ifeq ($(ERL),)
 $(error "Erlang not available on this system")
 endif
 
-REBAR_GLOBAL_CONFIG_DIR=${HOME}
-REBAR_CACHE_DIR=${HOME}/.cache/rebar3
-REBAR=./rebar3
+# Variables
+REBAR = REBAR_GLOBAL_CONFIG_DIR=${HOME} REBAR_CACHE_DIR=${HOME}/.cache/rebar3 rebar3
+APPS := $(shell \
+  for d in apps/*; do \
+    if [ -d "$$d/test" ] && find "$$d/test" -type f -name "*test*.erl" -print -quit | grep -q .; then \
+      basename $$d; \
+    fi; \
+  done \
+)
 
 ifeq ($(REBAR),)
 $(error "Rebar not available on this system")
 endif
 
 .PHONY: all compile doc clean lint format tree test dialyzer typer shell distclean pdf \
-  update-deps clean-common-test-data rebuild
+  update-deps clean-common-test-data rebuild compile_test
 
-all: deps compile dialyzer test
+all: compile
 
 # =============================================================================
 # Rules to build the system
@@ -56,6 +62,9 @@ update-deps:
 
 compile:
 		$(REBAR) compile
+
+compile_test:
+	$(REBAR) as test compile
 
 # Format the code (if you use the rebar3_format plugin)
 lint:
@@ -73,10 +82,11 @@ build-release:
 doc:
 		$(REBAR) doc
 
-eunit: compile clean-common-test-data
-		$(REBAR) eunit
+test: compile_test
+	KAZOO_CONFIG=./config/config-test.ini ERL_LIBS=./_build/test/lib/ ./scripts/eunit_run.escript $(APPS)
 
-test: compile eunit
+ct:
+	KAZOO_CONFIG=./config/config-test.ini $(REBAR) ct
 
 $(DEPS_PLT):
 		@echo Building local plt at $(DEPS_PLT)

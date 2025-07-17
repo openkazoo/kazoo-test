@@ -1,7 +1,12 @@
-.rebar3
+.*
+!.gitignore
+!.circleci
+!.github
 _*
 .eunit
+*.d
 *.o
+*.so
 *.beam
 *.plt
 *_plt

@@ -1,7 +1,3 @@
-; section are between [] = [section]
-; key = value
-; to comment add ";" in front of the line
-
 [amqp]
 uri = "amqp://guest:guest@127.0.0.1:5672"
 

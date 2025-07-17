@@ -13,9 +13,7 @@
 -include("knm.hrl").
 -include_lib("kazoo_stdlib/include/kz_log.hrl").
 
-
 -define(KEY, ?FEATURE_FORCE_OUTBOUND).
-
 
 -spec save(knm_number:knm_number()) -> knm_number:knm_number().
 save(N) ->
@@ -42,10 +40,11 @@ update(N) ->
     ?LOG_DEBUG("update: ~p", [N]),
     Private = feature(N),
     Public0 = kz_json:get_ne_value(?KEY, knm_phone_number:doc(knm_number:phone_number(N))),
-    Public = case kz_term:is_boolean(Public0) of
-                 'false' -> 'undefined';
-                 'true' -> kz_term:is_true(Public0)
-             end,
+    Public =
+        case kz_term:is_boolean(Public0) of
+            'false' -> 'undefined';
+            'true' -> kz_term:is_true(Public0)
+        end,
     NotChanged = kz_json:are_equal(Private, Public),
     case kz_term:is_empty(Public) of
         'true' -> knm_providers:deactivate_feature(N, ?KEY);

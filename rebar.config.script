@@ -7,19 +7,19 @@ KAZOO_CORE = [
     kazoo_amqp,
     kazoo_apps,
     kazoo_ast,
-    kazoo_attachments, 
+    kazoo_attachments,
     kazoo_auth,
     kazoo_bindings,
-    kazoo_caches, 
+    kazoo_caches,
     kazoo_call,
-    kazoo_config, 
+    kazoo_config,
     kazoo_convert,
     kazoo_couch,
     kazoo_csv,
     kazoo_data,
     kazoo_documents,
     kazoo_edr,
-    kazoo_endpoint, 
+    kazoo_endpoint,
     kazoo_etsmgr,
     kazoo_events,
     kazoo_fax,
@@ -35,7 +35,7 @@ KAZOO_CORE = [
     kazoo_perf,
     kazoo_proper,
     kazoo_schemas,
-    kazoo_services, 
+    kazoo_services,
     kazoo_sip,
     kazoo_speech,
     kazoo_stats,
@@ -54,165 +54,184 @@ KAZOO_CORE = [
 
 %% Define the dependencies
 Config = [
-{erl_opts, [debug_info
-            ,{warnings_as_errors, false}
-            ,{parse_transform, lager_transform}
-           ]},
-
-
-{project_plugins, [rebar3_lint, erlfmt]},
-
-{erlfmt, [
-    write,
-    {files, ["rebar.config", "applications/*/{src,include,test}/*.{hrl,erl}", "core/*/{src,include,test}/*.{hrl,erl}"]}
-]},
-
-{plugins, [rebar3_auto
-           ,rebar3_git_vsn
-          ]},
-
-{deps, [{lager, "3.9.2"}
-        ,{lager_syslog, {git, "https://github.com/erlang-lager/lager_syslog.git", {tag, "3.0.3"}}}
-        ,{syslog, {git, "https://github.com/2600hz/erlang-syslog", {ref, "bbad537a1cb5e4f37e672d2e2665659e850662d0"}}}
-        ,{rebar_vsn_plugin,{git, "https://github.com/erlware/rebar_vsn_plugin.git", {branch, "master"}}}
-        ,{martini,{git, "https://github.com/openkazoo/martini.git", {branch, "main"}}}
-       ]},
-
-{overrides, [
-    {override, plists, [
-        {erl_opts, [{warnings_as_errors, false}]}
+    {erl_opts, [
+        debug_info,
+        {warnings_as_errors, false},
+        {parse_transform, lager_transform}
     ]},
-    {override, eper, [
-        {erl_opts, [{warnings_as_errors, false}]}
+
+    {project_plugins, [rebar3_lint, erlfmt]},
+
+    {project_app_dirs, [
+        "core/*",
+        "applications/*"
     ]},
-    {override, jesse, [
-        {erl_opts, [{warnings_as_errors, false}]},
-        {deps, [
-            {jsx, ".*", {git, "https://github.com/talentdeficit/jsx.git", {tag, "2.9.0"}}},
-            {rfc3339, ".*",
-                {git, "https://github.com/andreineculau/rfc3339.git", {tag, "0.2.1-r15-compat"}}}
+
+    {erlfmt, [
+        write,
+        {files, [
+            "applications/**/*.{hrl,erl,src}",
+            "core/**/*.{hrl,erl,src}",
+            "rebar.config",
+            "rebar.config.script"
+        ]}
+    ]},
+
+    {plugins, [
+        rebar3_auto,
+        rebar3_git_vsn
+    ]},
+
+    {deps, [
+        {lager, "3.9.2"},
+        {lager_syslog, {git, "https://github.com/erlang-lager/lager_syslog.git", {tag, "3.0.3"}}},
+        {martini, {git, "https://github.com/openkazoo/martini.git", {branch, "main"}}},
+        {rabbit_common, "4.0.3"},
+        {rebar_vsn_plugin,
+            {git, "https://github.com/erlware/rebar_vsn_plugin.git", {branch, "master"}}},
+        {syslog,
+            {git, "https://github.com/2600hz/erlang-syslog",
+                {ref, "bbad537a1cb5e4f37e672d2e2665659e850662d0"}}}
+    ]},
+
+    {overrides, [
+        {override, plists, [
+            {erl_opts, [{warnings_as_errors, false}]}
+        ]},
+        {override, eper, [
+            {erl_opts, [{warnings_as_errors, false}]}
+        ]},
+        {override, jesse, [
+            {erl_opts, [{warnings_as_errors, false}]},
+            {deps, [
+                {jsx, ".*", {git, "https://github.com/talentdeficit/jsx.git", {tag, "2.9.0"}}},
+                {rfc3339, ".*",
+                    {git, "https://github.com/andreineculau/rfc3339.git",
+                        {tag, "0.2.1-r15-compat"}}}
+            ]}
+        ]}
+    ]},
+
+    {relx, [
+        {release, {kazoo, git}, [
+            % Core
+            amqp_cron,
+            amqp_leader,
+            kazoo,
+            kazoo_amqp,
+            kazoo_apps,
+            kazoo_ast,
+            kazoo_attachments,
+            kazoo_auth,
+            kazoo_bindings,
+            kazoo_caches,
+            kazoo_call,
+            kazoo_config,
+            kazoo_convert,
+            kazoo_couch,
+            kazoo_csv,
+            kazoo_data,
+            kazoo_documents,
+            kazoo_edr,
+            kazoo_endpoint,
+            kazoo_etsmgr,
+            kazoo_events,
+            kazoo_fax,
+            kazoo_fixturedb,
+            kazoo_globals,
+            kazoo_im,
+            kazoo_ips,
+            kazoo_ledgers,
+            kazoo_media,
+            kazoo_modb,
+            kazoo_number_manager,
+            kazoo_oauth,
+            kazoo_perf,
+            kazoo_proper,
+            kazoo_schemas,
+            kazoo_services,
+            kazoo_sip,
+            kazoo_speech,
+            kazoo_stats,
+            kazoo_stdlib,
+            kazoo_tasks,
+            kazoo_templates,
+            kazoo_token_buckets,
+            kazoo_transactions,
+            kazoo_translator,
+            kazoo_voicemail,
+            kazoo_web,
+            kazoo_xml,
+            sup,
+            webseq,
+
+            % System Applications
+            sasl,
+            lager,
+            lager_syslog,
+
+            {syntax_tools, none},
+            {compiler, none},
+            {runtime_tools, none},
+            {asn1, none},
+            {os_mon, none},
+            {crypto, none},
+            {public_key, none},
+            {ssl, none},
+            {acdc, none},
+            {ananke, none},
+            {blackhole, none},
+            {braintree, none},
+            {callflow, none},
+            {call_inspector, none},
+            {camper, none},
+            {cccp, none},
+            {cdr, none},
+            {conference, none},
+            {crossbar, none},
+            {doodle, none},
+            {ecallmgr, none},
+            {edr, none},
+            {fax, none},
+            {frontier, none},
+            {hangups, none},
+            {hotornot, none},
+            {jonny5, none},
+            {konami, none},
+            {media_mgr, none},
+            {milliwatt, none},
+            {notify, none},
+            {omnipresence, none},
+            {pivot, none},
+            {pusher, none},
+            {registrar, none},
+            {reorder, none},
+            {skel, none},
+            {spyvsspy, none},
+            {stats, none},
+            {stepswitch, none},
+            {sup, none},
+            {sysconf, none},
+            {tasks, none},
+            {teletype, none},
+            {trunkstore, none},
+            {webhooks, none}
+        ]},
+        {overlay, [
+            {copy, "_build/default/lib/sup/apps/sup/sup", "bin/sup"}
+        ]},
+        {dev_mode, true},
+        {include_erts, true},
+        {include_src, false},
+        {extended_start_script, true}
+    ]},
+
+    {profiles, [
+        {prod, [
+            {relx, [
+                {dev_mode, false},
+                {include_erts, true}
+            ]}
         ]}
     ]}
-]},
-
-{relx,
- [{release, {kazoo, git},
-        [
-        % Core
-        amqp_cron,
-        amqp_leader,
-        kazoo,
-        kazoo_amqp,
-        kazoo_apps,
-        kazoo_ast,
-        kazoo_attachments,
-        kazoo_auth,
-        kazoo_bindings,
-        kazoo_caches,
-        kazoo_call,
-        kazoo_config,
-        kazoo_convert,
-        kazoo_couch,
-        kazoo_csv,
-        kazoo_data,
-        kazoo_documents,
-        kazoo_edr,
-        kazoo_endpoint,
-        kazoo_etsmgr,
-        kazoo_events,
-        kazoo_fax,
-        kazoo_fixturedb,
-        kazoo_globals,
-        kazoo_im,
-        kazoo_ips,
-        kazoo_ledgers,
-        kazoo_media,
-        kazoo_modb,
-        kazoo_number_manager,
-        kazoo_oauth,
-        kazoo_perf,
-        kazoo_proper,
-        kazoo_schemas,
-        kazoo_services,
-        kazoo_sip,
-        kazoo_speech,
-        kazoo_stats,
-        kazoo_stdlib,
-        kazoo_tasks,
-        kazoo_templates,
-        kazoo_token_buckets,
-        kazoo_transactions,
-        kazoo_translator,
-        kazoo_voicemail,
-        kazoo_web,
-        kazoo_xml,
-        sup,
-        webseq,
-
-        % System Applications
-        sasl,
-        lager
-        ,lager_syslog
-
-        ,{syntax_tools, none}
-        ,{compiler, none}
-        ,{runtime_tools, none}
-        ,{asn1, none}
-        ,{os_mon, none}
-        ,{crypto, none}
-        ,{public_key, none}
-        ,{ssl, none}
-        ,{acdc, none}
-        ,{ananke, none}
-        ,{blackhole, none}
-        ,{braintree, none}
-        ,{callflow, none}
-        ,{call_inspector, none}
-        ,{camper, none}
-        ,{cccp, none}
-        ,{cdr, none}
-        ,{conference, none}
-        ,{crossbar, none}
-        ,{doodle, none}
-        ,{ecallmgr, none}
-        ,{edr, none}
-        ,{fax, none}
-        ,{frontier, none}
-        ,{hangups, none}
-        ,{hotornot, none}
-        ,{jonny5, none}
-        ,{konami, none}
-        ,{media_mgr, none}
-        ,{milliwatt, none}
-        ,{notify, none}
-        ,{omnipresence, none}
-        ,{pivot, none}
-        ,{pusher, none}
-        ,{registrar, none}
-        ,{reorder, none}
-        ,{skel, none}
-        ,{spyvsspy, none}
-        ,{stats, none}
-        ,{stepswitch, none}
-        ,{sup, none}
-        ,{sysconf, none}
-        ,{tasks, none}
-        ,{teletype, none}
-        ,{trunkstore, none}
-        ,{webhooks, none}
-        ]},
-    {overlay, [
-        {copy, "_build/default/lib/sup/apps/sup/sup", "bin/sup"}
-    ]},
-    {dev_mode, true},
-    {include_erts, true},
-    {include_src, false},
-    {extended_start_script, true}
- ]
-},
-
-{profiles, [{prod, [{relx, [ {dev_mode, false},
-                            {include_erts, true}]}]
-            }]
-}
 ].
